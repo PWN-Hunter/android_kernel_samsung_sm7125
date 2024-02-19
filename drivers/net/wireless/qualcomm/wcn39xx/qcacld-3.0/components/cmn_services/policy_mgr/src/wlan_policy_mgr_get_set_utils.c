@@ -627,7 +627,6 @@ QDF_STATUS policy_mgr_update_hw_mode_list(struct wlan_objmgr_psoc *psoc,
 		qdf_mem_malloc(sizeof(*pm_ctx->hw_mode.hw_mode_list) *
 		pm_ctx->num_dbs_hw_modes);
 	if (!pm_ctx->hw_mode.hw_mode_list) {
-		policy_mgr_err("Memory allocation failed for DBS");
 		return QDF_STATUS_E_FAILURE;
 	}
 
@@ -684,9 +683,9 @@ void policy_mgr_init_dbs_hw_mode(struct wlan_objmgr_psoc *psoc,
 		qdf_mem_malloc(sizeof(*pm_ctx->hw_mode.hw_mode_list) *
 		pm_ctx->num_dbs_hw_modes);
 	if (!pm_ctx->hw_mode.hw_mode_list) {
-		policy_mgr_err("Memory allocation failed for DBS");
 		return;
 	}
+
 	qdf_mem_copy(pm_ctx->hw_mode.hw_mode_list,
 		ev_wlan_dbs_hw_mode_list,
 		(sizeof(*pm_ctx->hw_mode.hw_mode_list) *
