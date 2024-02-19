@@ -481,8 +481,9 @@ bool pkt_capture_rx_in_order_offloaded_pkt(qdf_nbuf_t rx_ind_msg)
 #ifndef WLAN_FEATURE_PKT_CAPTURE_LITHIUM
 void pkt_capture_msdu_process_pkts(
 				uint8_t *bssid,
-				qdf_nbuf_t head_msdu,
-				uint8_t vdev_id, htt_pdev_handle pdev)
+				qdf_nbuf_t head_msdu, uint8_t vdev_id,
+				htt_pdev_handle pdev, uint16_t status)
+
 {
 	qdf_nbuf_t loop_msdu, pktcapture_msdu;
 	qdf_nbuf_t msdu, prev = NULL;
@@ -520,10 +521,11 @@ void pkt_capture_msdu_process_pkts(
 #else
 void pkt_capture_msdu_process_pkts(
 				uint8_t *bssid,
-				qdf_nbuf_t head_msdu,
-				uint8_t vdev_id, void *psoc)
+				qdf_nbuf_t head_msdu, uint8_t vdev_id,
+				htt_pdev_handle pdev, uint16_t status)
+
 {
-	qdf_nbuf_t loop_msdu, pktcapture_msdu;
+	qdf_nbuf_t loop_msdu, pktcapture_msdu, offload_msdu = NULL;
 	qdf_nbuf_t msdu, prev = NULL;
 
 	pktcapture_msdu = NULL;
@@ -542,7 +544,15 @@ void pkt_capture_msdu_process_pkts(
 				prev = msdu;
 			}
 		}
+		if (status == RX_OFFLOAD_PKT)
+			offload_msdu = loop_msdu;
 		loop_msdu = qdf_nbuf_next(loop_msdu);
+
+		/* Free offload msdu as it is delivered only to pkt capture */
+		if (offload_msdu) {
+			qdf_nbuf_free(offload_msdu);
+			offload_msdu = NULL;
+		}
 	}
 
 	if (!pktcapture_msdu)
