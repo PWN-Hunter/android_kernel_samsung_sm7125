@@ -79,10 +79,8 @@ pkt_capture_mgmtpkt_cb(void *context, void *ppdev, void *nbuf_list,
 	vdev = wlan_objmgr_get_vdev_by_opmode_from_psoc(psoc,
 							QDF_STA_MODE,
 							WLAN_PKT_CAPTURE_ID);
-	if (!vdev) {
-		pkt_capture_err("vdev is NULL");
-		goto free_buf;
-	}
+	if (!vdev)
+		return QDF_STATUS_E_FAILURE;
 
 	vdev_priv = pkt_capture_vdev_get_priv(vdev);
 	if (!vdev_priv) {

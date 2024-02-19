@@ -61,10 +61,8 @@ pkt_capture_register_callbacks(struct wlan_objmgr_vdev *vdev,
 	struct pkt_capture_vdev_priv *vdev_priv;
 	QDF_STATUS status;
 
-	if (!vdev) {
-		pkt_capture_err("vdev is NULL");
-		return QDF_STATUS_E_INVAL;
-	}
+	if (!vdev)
+		return 0;
 
 	vdev_priv = pkt_capture_vdev_get_priv(vdev);
 	if (!vdev_priv) {

@@ -22143,7 +22143,8 @@ static QDF_STATUS csr_process_roam_sync_callback(struct mac_context *mac_ctx,
 
 		csr_check_and_set_sae_single_pmk_cap(mac_ctx, session,
 						     session_id);
-		ucfg_pkt_capture_record_channel(vdev);
+		if (ucfg_pkt_capture_get_pktcap_mode(mac_ctx->psoc))
+			ucfg_pkt_capture_record_channel(vdev);
 
 		if (WLAN_REG_IS_5GHZ_CH_FREQ(bss_desc->chan_freq)) {
 			session->disable_hi_rssi = true;
