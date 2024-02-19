@@ -137,6 +137,7 @@ void pkt_capture_callback(void *soc, enum WDI_EVENT event, void *log_data,
 		struct pkt_capture_tx_hdr_elem_t *ptr_pktcapture_hdr;
 		struct pkt_capture_tx_hdr_elem_t pktcapture_hdr = {0};
 		struct hal_tx_completion_status tx_comp_status = {0};
+		struct qdf_tso_seg_elem_t *tso_seg = NULL;
 		uint32_t txcap_hdr_size =
 				sizeof(struct pkt_capture_tx_hdr_elem_t);
 
@@ -173,7 +174,15 @@ void pkt_capture_callback(void *soc, enum WDI_EVENT event, void *log_data,
 		tid = tx_comp_status.tid;
 		status = tx_comp_status.status;
 
-		nbuf_len = qdf_nbuf_len(desc->nbuf);
+		if (desc->frm_type == dp_tx_frm_tso) {
+			if (!desc->tso_desc)
+				return;
+			tso_seg = desc->tso_desc;
+			nbuf_len = tso_seg->seg.total_len;
+		} else {
+			nbuf_len = qdf_nbuf_len(desc->nbuf);
+		}
+
 		netbuf = qdf_nbuf_alloc(NULL,
 					roundup(nbuf_len + RESERVE_BYTES, 4),
 					RESERVE_BYTES, 4, false);
