@@ -9,6 +9,17 @@ config QCA_CLD_WLAN
 
 if QCA_CLD_WLAN != n
 
+config CONFIG_FEATURE_MONITOR_MODE_SUPPORT
+	bool "Enable support for monitor mode for legacy and lithium chips"
+	default n
+
+config CONFIG_WLAN_SYSFS_MONITOR_MODE_CHANNEL
+	bool "Enable support for sysfs nodes for monitor mode channel"
+	default n
+
+config CONFIG_WLAN_FEATURE_PKT_CAPTURE
+	bool "Enable support for packet capture and injection [ Work in Progress for injection ]"
+
 config QCACLD_WLAN_LFR3
 	bool "Enable the WLAN Legacy Fast Roaming feature Version 3"
 	default n
