@@ -1082,7 +1082,10 @@ struct hdd_context;
  * @handle_feature_update: Handle feature update only if it is triggered
  *			   by hdd_netdev_feature_update
  * @netdev_features_update_work: work for handling the netdev features update
-				 for the adapter.
+ * 				for the adapter.
+ * @delete_in_progress: Flag to indicate that the adapter delete is in
+ *			progress, and any operation using rtnl lock inside
+ *			the driver can be avoided/skipped.
  * @gro_disallowed: Flag to check if GRO is enabled or disable for adapter
  * @gro_flushed: Flag to indicate if GRO explicit flush is done or not
  */
@@ -1384,6 +1387,7 @@ struct hdd_adapter {
 	bool handle_feature_update;
 
 	qdf_work_t netdev_features_update_work;
+	bool delete_in_progress;
 	uint8_t gro_disallowed[DP_MAX_RX_THREADS];
 	uint8_t gro_flushed[DP_MAX_RX_THREADS];
 };
