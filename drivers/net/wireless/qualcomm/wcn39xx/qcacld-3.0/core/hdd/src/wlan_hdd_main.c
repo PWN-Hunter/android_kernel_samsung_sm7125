@@ -3904,6 +3904,10 @@ int hdd_wlan_start_modules(struct hdd_context *hdd_ctx, bool reinit)
 			break;
 		}
 
+		/* Override PS params for monitor mode */
+		if (hdd_get_conparam() == QDF_GLOBAL_MONITOR_MODE)
+			hdd_override_all_ps(hdd_ctx);
+
 		ret = hdd_configure_cds(hdd_ctx);
 		if (ret) {
 			hdd_err("Failed to Enable cds modules; errno: %d", ret);
@@ -3913,7 +3917,7 @@ int hdd_wlan_start_modules(struct hdd_context *hdd_ctx, bool reinit)
 		hdd_enable_power_management();
 
 		hdd_skip_acs_scan_timer_init(hdd_ctx);
-		
+
 #ifdef SEC_CONFIG_WLAN_BEACON_CHECK
 		qdf_mc_timer_init(&hdd_ctx->skip_bmiss_set_timer,
 			QDF_TIMER_TYPE_SW,
@@ -10807,9 +10811,6 @@ static void hdd_override_ini_config(struct hdd_context *hdd_ctx)
 		hdd_ctx->config->action_oui_enable = 0;
 		hdd_err("Ignore action oui ini, since no action_oui component");
 	}
-
-	if (QDF_GLOBAL_MONITOR_MODE == cds_get_conparam())
-		hdd_override_all_ps(hdd_ctx);
 }
 
 #ifdef ENABLE_MTRACE_LOG
@@ -13279,6 +13280,10 @@ int hdd_wlan_stop_modules(struct hdd_context *hdd_ctx, bool ftm_mode)
 		goto done;
 	case DRIVER_MODULES_ENABLED:
 		hdd_debug("Wlan transitioning (CLOSED <- ENABLED)");
+
+		/* Restore PS params for monitor mode */
+		if (hdd_get_conparam() == QDF_GLOBAL_MONITOR_MODE)
+			hdd_restore_all_ps(hdd_ctx);
 
 		if (hdd_get_conparam() == QDF_GLOBAL_FTM_MODE ||
 		    hdd_get_conparam() == QDF_GLOBAL_EPPING_MODE)
