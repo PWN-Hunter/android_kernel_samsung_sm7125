@@ -38,20 +38,19 @@ hdd_sysfs_validate_and_copy_buf(char *dest_buf, size_t dest_buf_size,
 				char const *src_buf, size_t src_buf_size);
 
 /**
- * hdd_sysfs_create_adapter_root_obj() - create adapter sysfs entries
- * @adapter: HDD adapter
+ * hdd_create_sysfs_files() - create sysfs files
+ * @hdd_ctx: pointer to hdd context
  *
  * Return: none
  */
-void hdd_sysfs_create_adapter_root_obj(struct hdd_adapter *adapter);
+void hdd_create_sysfs_files(struct hdd_context *hdd_ctx);
 
 /**
- * hdd_sysfs_destroy_adapter_root_obj() - Destroy adapter sysfs entries
- * @adapter: HDD adapter
+ * hdd_destroy_sysfs_files() - destroy sysfs files
  *
  * Return: none
  */
-void hdd_sysfs_destroy_adapter_root_obj(struct hdd_adapter *adapter);
+void hdd_destroy_sysfs_files(void);
 
 /**
  * hdd_sysfs_dp_aggregation_create() - API to create dp aggregation
@@ -77,33 +76,20 @@ void
 hdd_sysfs_dp_aggregation_destroy(void);
 
 /**
- * hdd_sys_validate_and_copy_buf() - validate sysfs input buf and copy into
- *                                   destination buffer
- * @dest_buf - pointer to destination buffer where data should be copied
- * @dest_buf_size - size of destination buffer
- * @src_buf - pointer to constant sysfs source buffer
- * @src_buf_size - size of source buffer
- *
- * Return: 0 for success and error code for failure
- */
-int
-hdd_sysfs_validate_and_copy_buf(char *dest_buf, size_t dest_buf_size,
-				char const *src_buf, size_t src_buf_size);
-
-/**
- * hdd_create_sysfs_files() - create sysfs files
- * @hdd_ctx: pointer to hdd context
+ * hdd_create_adapter_sysfs_files - create adapter sysfs files
+ * @adapter: pointer to adapter
  *
  * Return: none
  */
-void hdd_create_sysfs_files(struct hdd_context *hdd_ctx);
+void hdd_create_adapter_sysfs_files(struct hdd_adapter *adapter);
 
 /**
- * hdd_sysfs_destroy_sysfs_files() - destroy sysfs files
+ * hdd_destroy_adapter_sysfs_files - destroy adapter sysfs files
+ * @adapter: pointer to adapter
  *
  * Return: none
  */
-void hdd_destroy_sysfs_files(void);
+void hdd_destroy_adapter_sysfs_files(struct hdd_adapter *adapter);
 
 #else
 static inline int
@@ -139,6 +125,14 @@ hdd_sysfs_dp_aggregation_create(void)
 
 static inline void
 hdd_sysfs_dp_aggregation_destroy(void)
+{
+}
+
+static void hdd_create_adapter_sysfs_files(struct hdd_adapter *adapter)
+{
+}
+
+static void hdd_destroy_adapter_sysfs_files(struct hdd_adapter *adapter)
 {
 }
 
