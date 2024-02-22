@@ -23381,7 +23381,6 @@ static int __wlan_hdd_cfg80211_get_channel(struct wiphy *wiphy,
 		if (sta_ctx->conn_info.dot11mode < eCSR_CFG_DOT11_MODE_11N)
 			is_legacy_phymode = true;
 
-		chan_freq = sta_ctx->conn_info.chan_freq;
 	} else if ((adapter->device_mode == QDF_SAP_MODE) ||
 			(adapter->device_mode == QDF_P2P_GO_MODE)) {
 		struct hdd_ap_ctx *ap_ctx;
@@ -23390,8 +23389,6 @@ static int __wlan_hdd_cfg80211_get_channel(struct wiphy *wiphy,
 			hdd_err("SAP not started");
 			return -EINVAL;
 		}
-
-		chan_freq = ap_ctx->operating_chan_freq;
 
 		switch (ap_ctx->sap_config.SapHw_mode) {
 		case eCSR_DOT11_MODE_11n:
@@ -23415,6 +23412,7 @@ static int __wlan_hdd_cfg80211_get_channel(struct wiphy *wiphy,
 	if (!vdev)
 		return -EINVAL;
 
+	chan_freq = vdev->vdev_mlme.des_chan->ch_freq;
 	chandef->center_freq1 = vdev->vdev_mlme.des_chan->ch_cfreq1;
 	chandef->center_freq2 = 0;
 	chandef->chan = ieee80211_get_channel(wiphy, chan_freq);
@@ -23453,8 +23451,9 @@ static int __wlan_hdd_cfg80211_get_channel(struct wiphy *wiphy,
 	}
 
 	hdd_objmgr_put_vdev(vdev);
-	hdd_debug("ch_width:%d, center_freq1:%d, center_freq2:%d",
-		  chandef->width, chandef->center_freq1, chandef->center_freq2);
+	hdd_debug("primary_freq:%d, ch_width:%d, center_freq1:%d, center_freq2:%d",
+		  chan_freq, chandef->width, chandef->center_freq1,
+		  chandef->center_freq2);
 	return 0;
 }
 
