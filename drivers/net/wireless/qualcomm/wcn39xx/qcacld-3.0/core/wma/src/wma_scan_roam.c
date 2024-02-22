@@ -2863,25 +2863,25 @@ int wma_mlme_roam_synch_event_handler_cb(void *handle, uint8_t *event,
 
 	WMA_LOGD("LFR3: Received WMA_ROAM_OFFLOAD_SYNCH_IND");
 	if (!event) {
-		WMA_LOGE("%s: event param null", __func__);
+		WMA_LOGE("event param null", __func__);
 		goto cleanup_label;
 	}
 
 	param_buf = (WMI_ROAM_SYNCH_EVENTID_param_tlvs *) event;
 	if (!param_buf) {
-		WMA_LOGE("%s: received null buf from target", __func__);
+		WMA_LOGE("received null buf from target");
 		goto cleanup_label;
 	}
 
 	synch_event = param_buf->fixed_param;
 	if (!synch_event) {
-		WMA_LOGE("%s: received null event data from target", __func__);
+		WMA_LOGE("received null event data from target");
 		goto cleanup_label;
 	}
 
 	if (synch_event->vdev_id >= wma->max_bssid) {
-		WMA_LOGE("%s: received invalid vdev_id %d",
-				__func__, synch_event->vdev_id);
+		WMA_LOGE("received invalid vdev_id %d",
+			synch_event->vdev_id);
 		return status;
 	}
 
@@ -6442,7 +6442,7 @@ QDF_STATUS wma_set_roam_triggers(tp_wma_handle wma,
 void wma_register_pmkid_req_event_handler(tp_wma_handle wma_handle)
 {
 	if (!wma_handle) {
-		wma_err("%s: pmkid req wma_handle is NULL", __func__);
+		wma_err("pmkid req wma_handle is NULL");
 		return;
 	}
 
@@ -6465,39 +6465,39 @@ int wma_roam_pmkid_request_event_handler(void *handle, uint8_t *event,
 	QDF_STATUS status;
 
 	if (!event) {
-		wma_err("%s: received null event from target", __func__);
+		wma_err("received null event from target");
 		return -EINVAL;
 	}
 
 	param_buf = (WMI_ROAM_PMKID_REQUEST_EVENTID_param_tlvs *)event;
 	if (!param_buf) {
-		wma_err("%s: received null buf from target", __func__);
+		wma_err("received null buf from target");
 		return -EINVAL;
 	}
 
 	roam_pmkid_req_ev = param_buf->fixed_param;
 	if (!roam_pmkid_req_ev) {
-		wma_err("%s: received null event data from target", __func__);
+		wma_err("received null event data from target", __func__);
 		return -EINVAL;
 	}
 
 	if (roam_pmkid_req_ev->vdev_id >= wma->max_bssid) {
-		wma_err("%s: received invalid vdev_id %d",
-			 __func__, roam_pmkid_req_ev->vdev_id);
+		wma_err("received invalid vdev_id %d",
+			roam_pmkid_req_ev->vdev_id);
 		return -EINVAL;
 	}
 
 	num_entries = param_buf->num_pmkid_request;
 	if (num_entries > MAX_RSSI_AVOID_BSSID_LIST) {
-		wma_err("%s: num bssid entries:%d exceeds maximum value",
-			 __func__, num_entries);
+		wma_err("num bssid entries:%d exceeds maximum value",
+			 num_entries);
 		return -EINVAL;
 	}
 
 	src_list = param_buf->pmkid_request;
 	if (len < (sizeof(*roam_pmkid_req_ev) +
 		(num_entries * sizeof(*src_list)))) {
-		wma_err("%s: Invalid length:%d", __func__, len);
+		wma_err("Invalid length:%d", len);
 		return -EINVAL;
 	}
 
@@ -6513,7 +6513,7 @@ int wma_roam_pmkid_request_event_handler(void *handle, uint8_t *event,
 		if (qdf_is_macaddr_zero(roam_bsslist) ||
 		    qdf_is_macaddr_broadcast(roam_bsslist) ||
 		    qdf_is_macaddr_group(roam_bsslist)) {
-			wma_err("%s: Invalid bssid", __func__);
+			wma_err("Invalid bssid");
 			qdf_mem_free(dst_list);
 			return -EINVAL;
 		}
@@ -6527,7 +6527,7 @@ int wma_roam_pmkid_request_event_handler(void *handle, uint8_t *event,
 	status = wma->csr_roam_pmkid_req_cb(roam_pmkid_req_ev->vdev_id,
 					    dst_list);
 	if (QDF_IS_STATUS_ERROR(status)) {
-		wma_err("%s: Pmkid request failed", __func__);
+		wma_err("Pmkid request failed");
 		qdf_mem_free(dst_list);
 		return -EINVAL;
 	}

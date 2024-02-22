@@ -938,8 +938,7 @@ void hdd_reg_notifier(struct wiphy *wiphy,
 
 	if (cds_is_driver_unloading() || cds_is_driver_recovering() ||
 	    cds_is_driver_in_bad_state()) {
-		hdd_err("%s: unloading or ssr in progress, ignore",
-			__func__);
+		hdd_err("unloading or ssr in progress, ignore");
 		return;
 	}
 
@@ -949,7 +948,7 @@ void hdd_reg_notifier(struct wiphy *wiphy,
 	}
 
 	if (hdd_ctx->is_wiphy_suspended == true) {
-		hdd_err("%s: system/cfg80211 is already suspend", __func__);
+		hdd_err("system/cfg80211 is already suspend");
 		return;
 	}
 
